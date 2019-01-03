@@ -170,19 +170,50 @@ class UI_Mian(QMainWindow):
 
     def newSales(self):
         print('newSales.......')
-        input = inputView()
-        if input.exec_():
+        self.input = inputView(callback= self.updateUI)
+        if self.input.exec_():
             pass
-        if input.close() and len(input.info):
-            print(input.info)
-            self.userIconlable.setPixmap(QPixmap(input.info['image']).scaled(self.userIconlable.width(),self.userIconlable.height()))
-            self.userNameLable.setText(input.info['name'])
-            self.depLable.setText(input.info['dept'])
-            self.priceLabel.setText(input.info['price'])
-            self.productLabel.setText(input.info['product'])
-            self.totalPrice.setText('战绩:' + input.info['totalPrice'])
-            self.fromLabel.setText(input.info['fromType'])
 
+
+
+    def updateUI(self,info=None):
+        print(info)
+
+        if info['name']:
+            self.userNameLable.setText(info['name'])
+        else:
+            Tools.showAlert('请先输入员工姓名')
+            return
+
+        try:
+            if info['image']:
+                self.userIconlable.setPixmap(
+                    QPixmap(info['image']).scaled(self.userIconlable.width(), self.userIconlable.height()))
+        except KeyError as e:
+            Tools.showAlert('没有找到此员工图片')
+            return
+
+        self.depLable.setText(info['dept'])
+
+        if info['price']:
+            self.priceLabel.setText(info['price'])
+        else:
+            Tools.showAlert('请输入回款金额')
+            return
+
+        if info['product']:
+            self.productLabel.setText(info['product'])
+        else:
+            Tools.showAlert('请选择产品')
+            return
+
+        if info['totalPrice']:
+            self.totalPrice.setText('战绩:' + info['totalPrice'])
+        else:
+            Tools.showAlert('请输入提成金额')
+        # self.fromLabel.setText(input.info['fromType'])
+
+        self.input.close()
 
     def savaImage(self):
         print('savaImages........')
@@ -240,6 +271,7 @@ class inputView(QDialog):
         self.product = None
         self.fromType = None
         self.callback = callback
+        self.configDic = Tools.redFiles()
         self.info = dict()
         self.initUI()
 
@@ -262,18 +294,21 @@ class inputView(QDialog):
         layout.addWidget(self.nameText,0,1)
 
         label2 = QLabel('部门:')
-        self.deptList = QComboBox()
-        self.deptList.addItem('请选择部门')
+        # self.deptList = QComboBox()
+        # self.deptList.addItem('请选择部门')
 
-        # self.deptText = QLineEdit()
-        # self.deptText.setPlaceholderText('请输入员工部门')
+        self.deptText = QLineEdit()
+        self.deptText.setPlaceholderText('请输入员工部门')
         layout.addWidget(label2, 1, 0)
-        layout.addWidget(self.deptList, 1, 1)
+        layout.addWidget(self.deptText, 1, 1)
 
         label4 = QLabel('产品:')
 
         self.productList = QComboBox()
         self.productList.addItem('请选择回款产品')
+        for product in self.configDic['productList']:
+            self.productList.addItem(product)
+        self.productList.currentIndexChanged.connect(self.productChoose)
 
         # layout.addWidget(self.productList)
         # self.productText = QLineEdit()
@@ -313,13 +348,21 @@ class inputView(QDialog):
 
 
     def endEdit(self):
-        config = Tools.redFiles()
-        for img in Tools.getDirAllFiles(config['usericondir']):
-            if img.find(self.nameText.text()) >=0:
-                print(img)
-                self.info['image'] = img
-        print('自动填入部门及员工图像')
+        if self.nameText.text():
+            self.configDic = Tools.redFiles()
+            for img in Tools.getDirAllFiles(self.configDic['usericondir']):
+                if img.find(self.nameText.text()) >=0:
+                    print(img)
+                    self.info['image'] = img
+            if self.configDic:
+                self.dept = self.configDic['userInfo'][self.nameText.text()]
+                self.deptText.setText(self.dept)
+                print(self.dept)
 
+    def productChoose(self):
+
+        self.product = self.productList.currentText()
+        print(self.product)
 
     def confirmBtnClick(self):
         # print('..........')
@@ -329,7 +372,12 @@ class inputView(QDialog):
         self.info['product'] = self.product
         # self.info['fromType'] = self.fromType
         self.info['totalPrice'] = self.moneyText.text()
-        self.close()
+
+        self.callback(info = self.info)
+
+
+
+
 
 
 class setupView(QDialog):
@@ -360,18 +408,54 @@ class setupView(QDialog):
         layout.addWidget(closeBtn)
         v_layout.addLayout(layout)
 
+        self.configDic = Tools.redFiles()
+        if self.configDic:
+            self.configUserIconDirEdit.setText(self.configDic['usericondir'])
+
     def closeEvent(self,event):
         self.close()
 
     def configUserIconDir(self):
-        dir = Tools.open(1)
+        self.configDic = Tools.redFiles()
+        if not self.configDic:
+            self.configDic = dict()
+        dir = Tools.open(sender=1)
         self.configDic['usericondir'] = dir
         self.configUserIconDirEdit.setText(dir)
         Tools.writeFiles(self.configDic)
 
     def configUserListInfo(self):
-        # filePath = Tools.open(sender=2)
-        Tools.readExcelFiel(filePath=Tools.open(sender=2),sheetIndex=1)
+        file = Tools.open(sender=2)
+
+        self.configDic = Tools.redFiles()
+
+        u_list =  Tools.readExcelFiel(filepath=file,sheetIndex=1)
+
+        userDic = {}
+
+        for info in u_list:
+
+            userDic[info[1]] = info[3]
+
+
+        self.configDic['userInfo'] = userDic
+
+        print()
+
+        p_list = Tools.readExcelFiel(filepath=file,sheetIndex=2)
+
+        p_temp_list =[]
+
+        for p_info in p_list:
+            p_temp_list.append(p_info[1])
+
+        self.configDic["productList"] = p_temp_list
+
+        Tools.writeFiles(self.configDic)
+
+
+
+
 
     def closeView(self):
         self.close()
