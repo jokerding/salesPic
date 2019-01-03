@@ -118,9 +118,11 @@ class Tools(object):
 
 
     @staticmethod
-    def readExcelFiel(filepath=None, dic=None):
+    def readExcelFiel(filepath=None, dic=None,sheetIndex=None):
         excel = load_workbook(filepath)
-        sheet = excel.worksheets[0]
+        if not sheetIndex:
+            sheetIndex = 0
+        sheet = excel.worksheets[sheetIndex]
         list =[]
         i = 0
         for row in sheet.rows:
@@ -137,7 +139,9 @@ class Tools(object):
 
         print(list)
 
-        Tools.insert_into_table(tablename=Tools.tablename,values=list)
+        return list
+
+        # Tools.insert_into_table(tablename=Tools.tablename,values=list)
 
     @staticmethod
     def insert_into_table(tablename=None,values=None):
@@ -152,41 +156,7 @@ class Tools(object):
             SqliteDbUtil.DML(sql=sql, values=maps)
 
 
-    @staticmethod
-    def wxPacklist():
-        picklist = {'微信 1': 'com.wHEID.multplugin03', '微信 2': 'com.wHEID.multplugin04',
-                    '微信 3': 'com.wHEID.multplugin05',
-                    '微信 4': 'com.wHEID.multplugin06', '微信 5': 'com.wHEID.multplugin07',
-                    '微信 6': 'com.wHEID.multplugin08',
-                    '微信 7': 'com.wHEID.multplugin09', '微信 8': 'com.wHEID.multplugin0A',
-                    '微信 9': 'com.wHEID.multplugin0B',
-                    '微信 10': 'com.wHEID.multplugin0C', '微信 11': 'com.wHEID.multplugin0D',
-                    '微信 12': 'com.wHEID.multplugin0E',
-                    '微信 13': 'com.wHEID.multplugin0F', '微信 14': 'com.wHEID.multplugin0G',
-                    '微信 15': 'com.wHEID.multplugin0H',
-                    '微信 16': 'com.wHEID.multplugin0I', '微信 17': 'com.wHEID.multplugin0J',
-                    '微信 18': 'com.wHEID.multplugin0K',
-                    '微信 22': 'com.wHEID.multplugin0O', '微信 23': 'com.wHEID.multplugin0P',
-                    '微信 24': 'com.wHEID.multplugin0Q',
-                    '微信 25': 'com.wHEID.multplugin0R', '微信 26': 'com.wHEID.multplugin12',
-                    '微信 27': 'com.wHEID.multplugin13',
-                    '微信 28': 'com.wHEID.multplugin14', '微信 29': 'com.wHEID.multplugin15',
-                    '微信 30': 'com.wHEID.multplugin16',
-                    '微信 31': 'com.wHEID.multplugin17', '微信 32': 'com.wHEID.multplugin18',
-                    '微信 33': 'com.wHEID.multplugin19',
-                    '微信 34': 'com.wHEID.multplugin1A', '微信 35': 'com.wHEID.multplugin1B',
-                    '微信 37': 'com.wHEID.multplugin1D',
-                    '微信 38': 'com.wHEID.multplugin1E', '微信 39': 'com.wHEID.multplugin1F',
-                    '微信 40': 'com.wHEID.multplugin1G',
-                    '微信 41': 'com.wHEID.multplugin1H', '微信 42': 'com.wHEID.multplugin1I',
-                    '微信 43': 'com.wHEID.multplugin1J',
-                    '微信 44': 'com.wHEID.multplugin1K', '微信 45': 'com.wHEID.multplugin1L',
-                    '微信 46': 'com.wHEID.multplugin1M',
-                    '微信 47': 'com.wHEID.multplugin1N', '微信 48': 'com.wHEID.multplugin1O',
-                    '微信 49': 'com.wHEID.multplugin1P',
-                    '微信 50': 'com.wHEID.multplugin1Q','微信 51': 'com.tencent.mm'}
 
-        return picklist
 
 class mainWindow(QWidget):
     def __init__(self):

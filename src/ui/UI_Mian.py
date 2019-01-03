@@ -132,26 +132,26 @@ class UI_Mian(QMainWindow):
         self.priceLabel.setWordWrap(True)
 
         label2 = QLabel(self)
-        label2.setGeometry(55, 410, 50, 20)
+        label2.setGeometry(55, 430, 50, 20)
         label2.setStyleSheet("font:15pt '黑体';color:black;")
         label2.setText('产品:')
 
         self.productLabel = QLabel(self)
         self.productLabel.setText('xxxxx')
         self.productLabel.setStyleSheet("font:15pt '黑体';color:black;")
-        self.productLabel.setGeometry(115,410,200,20)
+        self.productLabel.setGeometry(115,430,200,20)
         self.productLabel.setWordWrap(True)
 
-        label3 = QLabel(self)
-        label3.setGeometry(55, 440, 95, 20)
-        label3.setStyleSheet("font:15pt '黑体';color:black;")
-        label3.setText('回款渠道:')
+       # label3 = QLabel(self)
+        #label3.setGeometry(55, 440, 95, 20)
+        # label3.setStyleSheet("font:15pt '黑体';color:black;")
+       # label3.setText('回款渠道:')
 
-        self.fromLabel = QLabel(self)
-        self.fromLabel.setText('xxxxx')
-        self.fromLabel.setStyleSheet("font:15pt '黑体';color:black;")
-        self.fromLabel.setGeometry(150, 440, 200, 20)
-        self.fromLabel.setWordWrap(True)
+        # self.fromLabel = QLabel(self)
+        # self.fromLabel.setText('xxxxx')
+        # self.fromLabel.setStyleSheet("font:15pt '黑体';color:black;")
+        # self.fromLabel.setGeometry(150, 440, 200, 20)
+        # self.fromLabel.setWordWrap(True)
 
         self.totalPrice = QLabel(self)
         self.totalPrice.setText('战绩:xxxxx')
@@ -281,13 +281,13 @@ class inputView(QDialog):
         layout.addWidget(label4, 2, 0)
         layout.addWidget(self.productList, 2, 1)
 
-        label5 = QLabel('回款渠道:')
-        self.fromList = QComboBox()
-        self.fromList.addItem('请选择回款渠道')
+        # label5 = QLabel('回款渠道:')
+        # self.fromList = QComboBox()
+        # self.fromList.addItem('请选择回款渠道')
         # self.fromText = QLineEdit()
         # self.fromText.setPlaceholderText('请输入回款渠道')
-        layout.addWidget(label5, 3, 0)
-        layout.addWidget(self.fromList, 3, 1)
+        # layout.addWidget(label5, 3, 0)
+        # layout.addWidget(self.fromList, 3, 1)
 
         label3 = QLabel('战果:')
         self.salesText = QLineEdit()
@@ -327,7 +327,7 @@ class inputView(QDialog):
         self.info['dept'] = self.dept
         self.info['price'] = self.salesText.text()
         self.info['product'] = self.product
-        self.info['fromType'] = self.fromType
+        # self.info['fromType'] = self.fromType
         self.info['totalPrice'] = self.moneyText.text()
         self.close()
 
@@ -370,7 +370,8 @@ class setupView(QDialog):
         Tools.writeFiles(self.configDic)
 
     def configUserListInfo(self):
-        pass
+        # filePath = Tools.open(sender=2)
+        Tools.readExcelFiel(filePath=Tools.open(sender=2),sheetIndex=1)
 
     def closeView(self):
         self.close()
