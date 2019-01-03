@@ -100,9 +100,11 @@ class UI_Mian(QMainWindow):
         self.userIconlable = QLabel(self)
         self.userIconlable.setGeometry(55,200,125,155)
         images = ':img/3.jpg'
-        pix =QPixmap(images).scaled(self.userIconlable.width(),self.userIconlable.height())
-        self.userIconlable.setAlignment(Qt.AlignCenter)
+        # pix =QPixmap(images).scaled(self.userIconlable.width(),self.userIconlable.height())
+        pix = QPixmap(images)
+        # self.userIconlable.setAlignment(Qt.AlignCenter)
         self.userIconlable.setPixmap(pix)
+        self.userIconlable.setScaledContents(True)
 
         # 员工姓名
         self.userNameLable = QLabel(self)
@@ -117,29 +119,29 @@ class UI_Mian(QMainWindow):
         self.depLable.setText('xxxxx')
         self.depLable.setGeometry(190,300, 130, 50)
         self.depLable.setAlignment(Qt.AlignCenter)
-        self.depLable.setStyleSheet("font:17pt '黑体';color:black;")
+        self.depLable.setStyleSheet("font:14pt '微软雅黑';color:black;")
         self.depLable.setWordWrap(True)
 
         label1 = QLabel(self)
         label1.setGeometry(55,380,50,20)
-        label1.setStyleSheet("font:15pt '黑体';color:black;")
+        label1.setStyleSheet("font:16pt '微软雅黑';color:black;")
         label1.setText('战果:')
 
         self.priceLabel = QLabel(self)
         self.priceLabel.setText('xxxxx')
-        self.priceLabel.setStyleSheet("font:15pt '黑体';color:black;")
+        self.priceLabel.setStyleSheet("font:16pt '微软雅黑';color:black;")
         self.priceLabel.setGeometry(115,380,150,20)
         self.priceLabel.setWordWrap(True)
 
         label2 = QLabel(self)
-        label2.setGeometry(55, 430, 50, 20)
-        label2.setStyleSheet("font:15pt '黑体';color:black;")
+        label2.setGeometry(55, 420, 50, 20)
+        label2.setStyleSheet("font:16pt '微软雅黑';color:black;")
         label2.setText('产品:')
 
         self.productLabel = QLabel(self)
         self.productLabel.setText('xxxxx')
-        self.productLabel.setStyleSheet("font:15pt '黑体';color:black;")
-        self.productLabel.setGeometry(115,430,200,20)
+        self.productLabel.setStyleSheet("font:16pt '微软雅黑';color:black;")
+        self.productLabel.setGeometry(115,420,200,20)
         self.productLabel.setWordWrap(True)
 
        # label3 = QLabel(self)
@@ -155,7 +157,9 @@ class UI_Mian(QMainWindow):
 
         self.totalPrice = QLabel(self)
         self.totalPrice.setText('战绩:xxxxx')
-        self.totalPrice.setStyleSheet("font:30pt '黑体';color:red;")
+
+        self.totalPrice.setFont(QFont("Microsoft YaHei",40,75))
+        self.totalPrice.setStyleSheet("color:red;")
         self.totalPrice.setAlignment(Qt.AlignCenter)
         self.totalPrice.setGeometry(55,470,230,40)
         self.totalPrice.setWordWrap(True)
@@ -187,8 +191,7 @@ class UI_Mian(QMainWindow):
 
         try:
             if info['image']:
-                self.userIconlable.setPixmap(
-                    QPixmap(info['image']).scaled(self.userIconlable.width(), self.userIconlable.height()))
+                self.userIconlable.setPixmap(QPixmap(info['image']))
         except KeyError as e:
             Tools.showAlert('没有找到此员工图片')
             return
